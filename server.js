@@ -34,6 +34,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 const PORT = process.env.PORT || 3001
 
+app.use((req, res, next) => {
+    res.status(404).send('404: Not Found');
+  });
 app.get('/', (req, res) => {
     res.send('Welcome to Tanzania Blood Donors app!' + ' ' + 
               'Use /api/donors to fetch all donors and /api/centers to fetch all blood centers');
