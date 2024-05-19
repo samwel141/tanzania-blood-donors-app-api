@@ -1,0 +1,30 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/server.js"
+      }
+    ],
+    "env": {
+      "PORT": "4000",
+      "MONGODB_URL_DEV": "mongodb://127.0.0.1:27017/tanzania-blood-donors-db",
+      "MONGODB_URL_VS": "mongodb+srv://samwel141:9SAMwel%409@cluster0.z1fdjtk.mongodb.net/tanzania-blood-donors-db?retryWrites=true&w=majority",
+      "MONGODB_URL_PROD": "mongodb+srv://samwel141:9SAMwel%409@cluster0.z1fdjtk.mongodb.net/tanzania-blood-donors-db?retryWrites=true&w=majority&appName=Cluster0",
+      "DONOR_ACCESS_TOKEN_SECRET": "!donor@access^token*secret!!",
+      "DONOR_REFRESH_TOKEN_SECRET": "!donor@refreshtoken@secret!!",
+      "DONOR_ACCESS_TOKEN_EXPIRE_TIME": "3600s",
+      "DONOR_REFRESH_TOKEN_EXPIRE_TIME": "2d",
+      "CENTER_ACCESS_TOKEN_SECRET": "!center@access^token*secret!!",
+      "CENTER_REFRESH_TOKEN_SECRET": "!center@refreshtoken@secret!!",
+      "CENTER_ACCESS_TOKEN_EXPIRE_TIME": "3600s",
+      "CENTER_REFRESH_TOKEN_EXPIRE_TIME": "2d"
+    }
+  }
+  
