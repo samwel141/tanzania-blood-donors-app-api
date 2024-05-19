@@ -180,21 +180,21 @@ const login = (req, res, next) => {
             }
             if(result){
                 console.log(donor.firstname)
-                let token = jwt.sign({name: donor.firstname}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME})
-                let refreshToken = jwt.sign({name: donor.firstname}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME})
-                res.json({
+                let token = jwt.sign({name: donor.firstname}, process.env.DONOR_ACCESS_TOKEN_SECRET, {expiresIn: process.env.DONOR_ACCESS_TOKEN_EXPIRE_TIME})
+                let refreshToken = jwt.sign({name: donor.firstname}, process.env.DONOR_REFRESH_TOKEN_SECRET, {expiresIn: process.env.DONOR_REFRESH_TOKEN_EXPIRE_TIME})
+                 return res.json({
                     message: 'Login Successful',
                     token,
                     refreshToken
                 })
             } else{
-                res.json({
+                return res.json({
                     message: 'Password does not matched!'
                 })
             }
           })
         }else{
-            res.json({
+            return res.json({
                 message: 'No user found'
             })
         }
@@ -258,22 +258,6 @@ function sendResetEmail(email, resetToken) {
         to: email,
         subject: 'Password Reset Request',
         // text: `To reset your password, please click on the following link: 
-        //        https://github.com/samwel141`
-
-    //     html: `
-    //     <p>To reset your password, please click on the following link:</p>
-    //     <a href="https://github.com/samwel141">Reset Password</a>
-    // `
-
-    // html: `
-    //     <div style="background-color: #CED798E6; color: #FFFFFF; padding: 20px; border-radius: 10px;">
-    //         <h1 style="color: #DC143C;">🔐 Password Reset Request 🔐</h1>
-    //         <p style="font-size: 18px;">To reset your password, please click on the following link:</p>
-    //         <a href="https://github.com/samwel141" style="background-color: #DC143C; color: #FFFFFF; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password 🔄</a>
-    //         <p style="font-size: 18px;">If you did not request a password reset, please ignore this email.</p>
-    //         <p style="font-size: 18px;">Thank you! 😊</p>
-    //     </div>
-    // `
 
     html: `
         <div style="text-align: center; background-color: #5C500A; color: #FFFFFF; padding: 20px; border-radius: 10px;">
@@ -285,11 +269,9 @@ function sendResetEmail(email, resetToken) {
             <p style="font-size: 18px;">Thank you! 😊</p>
         </div>
     `
-
-
     };
-//      https://github.com/reset/${resetToken}`
-    // Send email
+
+
     return transporter.sendMail(mailOptions);
 }
 

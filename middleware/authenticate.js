@@ -1,9 +1,13 @@
 const jwt = require('jsonwebtoken');
 
-const authenticate = (req, res, next) => {
+
+
+
+// Donor authentication
+const authenticateDonor = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decode = jwt.verify(token, process.env.DONOR_ACCESS_TOKEN_SECRET);
         req.user = decode;
         next();
     } catch (error) {
@@ -19,4 +23,31 @@ const authenticate = (req, res, next) => {
     }
 }
 
-module.exports = authenticate;
+
+
+
+// Blood Center authentication
+const authenticateCenter = (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decode = jwt.verify(token, process.env.CENTER_ACCESS_TOKEN_SECRET);
+        req.user = decode;
+        next();
+    } catch (error) {
+        if (error.name === "TokenExpiredError") {
+            res.status(401).json({
+                message: "Token Expired"
+            });
+        } else {
+            res.status(401).json({
+                message: 'Authentication Failed!'
+            });
+        }
+    }
+}
+
+
+
+
+
+module.exports = {authenticateDonor, authenticateCenter};

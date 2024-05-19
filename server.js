@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const dotenv = require('dotenv')
 dotenv.config()
@@ -12,7 +13,7 @@ const DonorAuthRoute = require('./routes/DonorRoutes')
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/tanzania-blood-donors-db')
+mongoose.connect(process.env.MONGODB_URL_DEV)
 const db = mongoose.connection
 db.on('error', (err) => {
     console.log(err)
@@ -24,10 +25,15 @@ db.on('open', () => {
 })
 
 
-
-
-
 const app = express()
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'] 
+  }));
+
+  app.options('*', cors());
 
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
@@ -35,8 +41,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 const PORT = process.env.PORT || 3001
 
 app.get('/', (req, res) => {
-    res.send('Welcome to Tanzania Blood Donors app!' + ' ' + 
-              'Use /api/donors to fetch all donors and /api/centers to fetch all blood centers');
+    res.send('Welcome to Tanzania Blood Donors app API!!');
   });
 
 app.listen(PORT, () => {

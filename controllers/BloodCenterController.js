@@ -174,8 +174,8 @@ const login = (req, res, next) => {
                 })
             }
             if(result){
-                let token = jwt.sign({name: bloodCenter.name}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME})
-                let refreshToken = jwt.sign({name: bloodCenter.name}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: process.env.REFRESH_TOKEN_EXPIRE_TIME})
+                let token = jwt.sign({name: bloodCenter.name}, process.env.CENTER_ACCESS_TOKEN_SECRET, {expiresIn: process.env.CENTER_ACCESS_TOKEN_EXPIRE_TIME})
+                let refreshToken = jwt.sign({name: bloodCenter.name}, process.env.CENTER_REFRESH_TOKEN_SECRET, {expiresIn: process.env.CENTER_REFRESH_TOKEN_EXPIRE_TIME})
                 res.json({
                     message: 'Login Successful',
                     token,
