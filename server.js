@@ -48,17 +48,14 @@ app.get('/', (req, res) => {
     res.send('Welcome to Tanzania Blood Donors app API!!');
   });
 
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`)
-// })
-// const PORT = process.env.PORT || 3001;
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+})
+
 
 app.use('/api/centers', BloodCenterRoute)
 app.use('/api/donors', DonorAuthRoute)
 
 // export default app;
 
-module.exports = server;
+module.exports = app;
