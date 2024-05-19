@@ -28,10 +28,6 @@ mongoose.connect(process.env.MONGODB_URL_VS)
   .catch(err => console.log('Database connection error:', err));
 
 
-// db.on('open', () => {
-//     console.log("Database connection Established!")
-// })
-
 
 const app = express()
 
@@ -46,7 +42,7 @@ app.use(cors({
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 
-// const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
 
 app.get('/', (req, res) => {
     res.send('Welcome to Tanzania Blood Donors app API!!');
@@ -55,10 +51,14 @@ app.get('/', (req, res) => {
 // app.listen(PORT, () => {
 //     console.log(`Server is running on port ${PORT}`)
 // })
+// const PORT = process.env.PORT || 3001;
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
-
-// app.use('/api/centers', BloodCenterRoute)
-// app.use('/api/donors', DonorAuthRoute)
+app.use('/api/centers', BloodCenterRoute)
+app.use('/api/donors', DonorAuthRoute)
 
 // export default app;
 
+module.exports = server;
