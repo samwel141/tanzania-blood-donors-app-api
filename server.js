@@ -10,14 +10,10 @@ dotenv.config()
 
 const BloodCenterRoute = require('./routes/BloodCenterRoutes')
 const DonorAuthRoute = require('./routes/DonorRoutes')
-
-
-
-// mongoose.connect(process.env.MONGODB_URL_VS1)
-// const db = mongoose.connection
-// db.on('error', (err) => {
-//     console.log(err)
-// } )
+const BloodSubmit = require('./routes/BloodSubmit')
+const BloodRequest = require('./routes/BloodRequests')
+const BloodUsage = require('./routes/Usage')
+const BloodDonation = require('./routes/Donation')
 
 
 
@@ -33,7 +29,7 @@ const app = express()
 
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'] 
   }));
 
@@ -55,7 +51,10 @@ app.listen(PORT, () => {
 
 app.use('/api/centers', BloodCenterRoute)
 app.use('/api/donors', DonorAuthRoute)
+app.use('/api/submit_blood', BloodSubmit)
+app.use('/api/request_blood', BloodRequest)
+app.use('/api/donation', BloodDonation)
+app.use('/api/usage', BloodUsage)
 
-// export default app;
 
 module.exports = app;
