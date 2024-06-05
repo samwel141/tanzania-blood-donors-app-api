@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { authenticateCenter } = require('../middleware/authenticate')
+// const { authenticateCenter } = require('../middleware/authenticate')
 const BloodCenterController = require('../controllers/BloodCenterController')
 
 
-router.get('/', authenticateCenter, express.json(), BloodCenterController.allBloodCenters)
+router.get('/', express.json(), BloodCenterController.allBloodCenters)
 router.get('/getbyid', express.json(), BloodCenterController.getBloodCenterById)
 router.get('/update', express.json(), BloodCenterController.updateBloodCenter)
 router.get('/remove', express.json(), BloodCenterController.deleteBloodCenter)
