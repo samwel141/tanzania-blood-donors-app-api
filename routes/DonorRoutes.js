@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { authenticateDonor } = require('../middleware/authenticate')
+// const { authenticateDonor } = require('../middleware/authenticate')
 const DonorAuthController = require('../controllers/DonorController')
 
-router.get('/', authenticateDonor, express.json(), DonorAuthController.allDonors)
+router.get('/', express.json(), DonorAuthController.allDonors)
 router.get('/getbyid', express.json(), DonorAuthController.getDonorById)
 router.get('/update', express.json(), DonorAuthController.updateDonor)
 router.get('/remove', express.json(), DonorAuthController.deleteDonor)
