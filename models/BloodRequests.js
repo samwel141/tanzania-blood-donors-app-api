@@ -21,8 +21,9 @@ const basicInfoSchema = new mongoose.Schema({
     total_requested: { type: Number, required: true },
     total_expired: { type: Number, required: true },
     name_of_requester: { type: String, required: true },
-    designation: { type: String, required: true },
-    name_of_approver: { type: String, required: true }
+    designation_of_requester: { type: String, required: true },
+    name_of_approver: { type: String, required: true },
+    designation_of_approver: { type: String, required: true },
 });
 
 const bloodRequestSchema = new mongoose.Schema({
