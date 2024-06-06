@@ -27,7 +27,8 @@ const register = (req, res, next) => {
         bloodCenter.save()
         .then(() => {
             return res.status(201).json({
-                message: 'Blood Center Added successfully'
+                message: 'Blood Center Added successfully',
+                bloodCenter
             });
         })
         .catch(error => {
@@ -127,7 +128,8 @@ const updateBloodCenter = (req, res, next) => {
     BloodCenter.findByIdAndUpdate(centerID, {$set: updatedData})
     .then(() => {
       res.json({
-          message: 'Blood Center Updated successfully'
+          message: 'Blood Center Updated successfully',
+          updatedData: updatedData
       })
     })
     .catch(error => {
@@ -178,6 +180,7 @@ const login = (req, res, next) => {
                 let refreshToken = jwt.sign({name: bloodCenter.name}, process.env.CENTER_REFRESH_TOKEN_SECRET, {expiresIn: process.env.CENTER_REFRESH_TOKEN_EXPIRE_TIME})
                 res.json({
                     message: 'Login Successful',
+                    user: bloodCenter,
                     token,
                     refreshToken
                 })

@@ -29,7 +29,8 @@ const register = (req, res, next) => {
         donor.save()
         .then(() => {
             return res.status(201).json({
-                message: 'User Added successfully'
+                message: 'User Added successfully',
+                user: donor
             });
         })
         .catch(error => {
@@ -132,7 +133,8 @@ const updateDonor = (req, res, next) => {
     Donor.findByIdAndUpdate(donorID, {$set: updatedData})
     .then(() => {
       res.json({
-          message: 'Donor Updated successfully'
+          message: 'Donor Updated successfully',
+          updatedData: updatedData
       })
     })
     .catch(error => {
@@ -185,7 +187,8 @@ const login = (req, res, next) => {
                  return res.json({
                     message: 'Login Successful',
                     token,
-                    refreshToken
+                    refreshToken,
+                    user: donor
                 })
             } else{
                 return res.json({
