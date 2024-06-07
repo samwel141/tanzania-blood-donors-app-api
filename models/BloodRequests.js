@@ -28,6 +28,7 @@ const basicInfoSchema = new mongoose.Schema({
 
 const bloodRequestSchema = new mongoose.Schema({
     center_id: { type: String },
+    status: { type: String, default: 'pending' },
     basic_info: { type: basicInfoSchema, required: true },
     whole_blood: {
         a_pos: { type: bloodGroupSchema },
