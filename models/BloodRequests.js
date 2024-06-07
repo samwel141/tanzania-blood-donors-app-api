@@ -14,7 +14,7 @@ const bloodGroupSchema = new mongoose.Schema({
         pediatric: { type: Number, required: true }
     },
     total: { type: Number, required: true },
-    remarks: { type: String, required: true }
+    remarks: { type: String }
 });
 
 const basicInfoSchema = new mongoose.Schema({
