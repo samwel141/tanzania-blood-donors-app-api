@@ -64,14 +64,16 @@ const getDonationById = async (req, res) => {
 
 // Get donations by donor ID
 const getDonationsByDonorId = async (req, res) => {
+    console.log('Here')
     try {
-        const donations = await Donation.find({ donor_id: req.params.donor_id });
+        console.log(req.query.donor_id)
+        const donations = await Donation.find({ donor_id: req.query.donor_id });
         
         const formattedDonations = donations.map(donation => ({
             id: donation._id,
             donor_id: donation.donor_id,
             center_id: donation.center_id,
-            date: donation.date.toLocaleDateString('en-US'), // Format date to M/D/Y
+            date: donation.date.toLocale(), 
             sample_id: donation.sample_id
         }));
 

@@ -15,7 +15,7 @@ const donationSchema = new mongoose.Schema({
     },
     sample_id: {
         type: String,
-        required: true
+        required: false
     }
 });
 

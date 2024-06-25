@@ -28,8 +28,11 @@ const getAllUsage = async (req, res) => {
 // Get blood samples by donor_id
 const getAllUsageByDonorId = async (req, res) => {
     try {
-        const { donor_id } = req.params;
+        const { donor_id } = req.query;
+        console.log(req.query)
+        console.log('From the route', donor_id);
         const bloodSamples = await BloodUsage.find({ donor_id });
+        console.log(bloodSamples)
 
         const formattedSamples = bloodSamples.map(sample => {
             return {
