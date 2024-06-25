@@ -5,7 +5,7 @@ const BloodUsage = require('../controllers/BloodUsageController');
 
 
 // router.get('/', authenticateCenter, express.json(), BloodCenterController.allBloodCenters)
-router.get('/', express.json(), BloodUsage. getAllUsage)
+router.get('/', express.json(), BloodUsage. getAllUsageByDonorId)
 router.post('/', express.json(), BloodUsage. postUsage)
 router.get('/donor/:donor_id', BloodUsage.getAllUsageByDonorId)
 router.get('/center/:center_id', BloodUsage.getAllUsageByDonorId)
