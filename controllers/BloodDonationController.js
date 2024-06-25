@@ -73,7 +73,7 @@ const getDonationsByDonorId = async (req, res) => {
             id: donation._id,
             donor_id: donation.donor_id,
             center_id: donation.center_id,
-            date: donation.date.toLocale(), 
+            date: donation.date, 
             sample_id: donation.sample_id
         }));
 
