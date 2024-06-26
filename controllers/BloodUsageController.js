@@ -1,6 +1,9 @@
 // controllers/bloodSampleController.js
 
 const BloodUsage = require('../models/Usage');
+const Donor = require('../models/Donor');
+const BloodCenter = require('../models/BloodCenter');
+const mongoose = require('mongoose');
 
 // Get all blood samples
 const getAllUsage = async (req, res) => {
@@ -25,31 +28,57 @@ const getAllUsage = async (req, res) => {
     }
 };
 
-// Get blood samples by donor_id
+
+
+const isValidObjectId = (id) => {
+    return mongoose.Types.ObjectId.isValid(id);
+};
+
 const getAllUsageByDonorId = async (req, res) => {
     try {
         const { donor_id } = req.query;
-        console.log(req.query)
+        console.log(req.query);
         console.log('From the route', donor_id);
-        const bloodSamples = await BloodUsage.find({ donor_id });
-        console.log(bloodSamples)
 
-        const formattedSamples = bloodSamples.map(sample => {
+        // Fetch blood samples by donor_id
+        const bloodSamples = await BloodUsage.find({ donor_id });
+        console.log(bloodSamples);
+
+        // Fetch donor information by donor_id
+        const donor = await Donor.findOne({ _id: donor_id });
+
+        // Check if donor exists
+        if (!donor) {
+            return res.status(404).json({ error: 'Donor not found' });
+        }
+
+        // Fetch blood center information for each blood sample
+        const formattedSamples = await Promise.all(bloodSamples.map(async (sample) => {
+            let bloodCenter = null;
+            if (isValidObjectId(sample.center_id)) {
+                bloodCenter = await BloodCenter.findOne({ _id: sample.center_id });
+            }
+
             return {
                 _id: sample._id,
                 donor_id: sample.donor_id,
                 center_id: sample.center_id,
                 date: sample.date,
                 createdAt: sample.createdAt,
-                updatedAt: sample.updatedAt
+                updatedAt: sample.updatedAt,
+                firstname: donor.firstname,
+                surname: donor.sirname,
+                center_name: bloodCenter ? bloodCenter.name : 'Unknown'
             };
-        });
+        }));
 
         res.status(200).json({ data: formattedSamples });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 
 // Get blood sample by ID
 const getById = async (req, res) => {

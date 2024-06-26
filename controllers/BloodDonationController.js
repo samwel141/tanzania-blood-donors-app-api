@@ -1,4 +1,7 @@
 const Donation = require('../models/Donation');
+const Donor = require('../models/Donor');
+const BloodCenter = require('../models/BloodCenter');
+const mongoose = require('mongoose');
 
 // Post a new donation
 const postDonation = async (req, res) => {
@@ -62,19 +65,39 @@ const getDonationById = async (req, res) => {
     }
 };
 
-// Get donations by donor ID
+
+
+const isValidObjectId = (id) => {
+    return mongoose.Types.ObjectId.isValid(id);
+};
 const getDonationsByDonorId = async (req, res) => {
-    console.log('Here')
     try {
-        console.log(req.query.donor_id)
-        const donations = await Donation.find({ donor_id: req.query.donor_id });
+        const { donor_id } = req.query;
         
-        const formattedDonations = donations.map(donation => ({
-            id: donation._id,
-            donor_id: donation.donor_id,
-            center_id: donation.center_id,
-            date: donation.date, 
-            sample_id: donation.sample_id
+        const donations = await Donation.find({ donor_id });
+
+        const donor = await Donor.findOne({ _id: donor_id });
+
+        if (!donor) {
+            return res.status(404).json({ error: 'Donor not found' });
+        }
+
+        const formattedDonations = await Promise.all(donations.map(async (donation) => {
+            let bloodCenter = null;
+            if (isValidObjectId(sample.center_id)) {
+                bloodCenter = await BloodCenter.findOne({ _id: sample.center_id });
+            }
+
+            return {
+                id: donation._id,
+                donor_id: donation.donor_id,
+                center_id: donation.center_id,
+                date: donation.date,
+                sample_id: donation.sample_id,
+                firstname: donor.firstname,
+                surname: donor.sirname,
+                center_name: bloodCenter ? bloodCenter.name : 'Unknown'
+            };
         }));
 
         res.status(200).json(formattedDonations);
