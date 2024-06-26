@@ -84,8 +84,8 @@ const getDonationsByDonorId = async (req, res) => {
 
         const formattedDonations = await Promise.all(donations.map(async (donation) => {
             let bloodCenter = null;
-            if (isValidObjectId(sample.center_id)) {
-                bloodCenter = await BloodCenter.findOne({ _id: sample.center_id });
+            if (isValidObjectId(donation.center_id)) {
+                bloodCenter = await BloodCenter.findOne({ _id: donation.center_id });
             }
 
             return {
