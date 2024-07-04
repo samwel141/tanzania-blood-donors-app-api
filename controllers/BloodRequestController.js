@@ -19,21 +19,14 @@ const getAllRequests = async (req, res) => {
         const requests = await BloodRequest.find().lean();
         const centers = await BloodCenter.find().lean();
 
-        // Create a map of center ObjectIds to center names
         const centerMap = centers.reduce((map, center) => {
             map[center._id.toString()] = center.name;  // Use toString() to ensure the keys are strings
             return map;
         }, {});
 
-        // Log the centerMap for debugging
-        console.log("Center Map:", centerMap);
-
-        // Format the requests with center names
         const formattedRequests = requests.map(request => {
-            const centerName = centerMap[request.center_id.toString()] || 'Unknown';  // Default to 'Unknown' if no match
+            const centerName = centerMap[request.center_id.toString()] || 'Unknown';  
 
-            // Log the mapping process for debugging
-            console.log(`Request center_id: ${request.center_id}, Mapped center_name: ${centerName}`);
 
             return {
                 _id: request._id,

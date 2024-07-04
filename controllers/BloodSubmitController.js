@@ -1,16 +1,5 @@
 const BloodSample = require('../models/BloodSubmit'); 
-
-// 1. Post blood sample data, allowing insertion of a single document with multiple samples
-// const postBloodSample = async (req, res, next) => {
-//     try {
-//         const bloodSampleData = req.body;
-//         const bloodSample = new BloodSample(bloodSampleData);
-//         const savedSample = await bloodSample.save();
-//         res.status(201).json(savedSample);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
+const BloodCenter = require('../models/BloodCenter');
 
 
 const postBloodSample = async (req, res, next) => {
@@ -50,30 +39,63 @@ const postBloodSample = async (req, res, next) => {
 };
 
 
-// 2. Get all blood samples
 // const getAllBloodSamples = async (req, res, next) => {
 //     try {
 //         const bloodSamples = await BloodSample.find();
 //         const count = bloodSamples.length;
 
+//         const formattedSamples = bloodSamples.map(sample => {
+//             return {
+//                 _id: sample._id,
+//                 center_id: sample.center_id,
+//                 facility_sending_sample: sample.facility_sending_sample,
+//                 center: sample.center,
+//                 hub: sample.hub,
+//                 sender_name: sample.sender_name,
+//                 dispatch_date: sample.dispatch_date,
+//                 samples: sample.samples.map(s => ({
+//                     _id: s._id,
+//                     sample_id: s.sample_id,
+//                     hiv: s.hiv,
+//                     hbsag: s.hbsag,
+//                     syphilis: s.syphilis,
+//                     bgs: s.bgs,
+//                     hcv: s.hcv,
+//                     other: s.other
+//                 })),
+//                 created_at: sample.created_at,
+//                 updated_at: sample.updated_at,
+//                 __v: sample.__v
+//             };
+//         });
 
-//         // res.status(200).json(bloodSamples);
-//         res.status(200).json({ total: count, data: bloodSamples });
+//         res.status(200).json({ total: count, data: formattedSamples });
 //     } catch (error) {
 //         res.status(500).json({ error: error.message });
 //     }
 // };
 
-
 const getAllBloodSamples = async (req, res, next) => {
     try {
-        const bloodSamples = await BloodSample.find();
-        const count = bloodSamples.length;
+        const bloodSamples = await BloodSample.find().lean();
+        const centers = await BloodCenter.find().lean();
+
+        const centerMap = centers.reduce((map, center) => {
+            map[center._id.toString()] = center.name;  
+            return map;
+        }, {});
+
+        console.log("Center Map:", centerMap);
 
         const formattedSamples = bloodSamples.map(sample => {
+            const centerName = centerMap[sample.center_id.toString()] || 'Unknown';  
+
+            console.log(`Sample center_id: ${sample.center_id}, Mapped center_name: ${centerName}`);
+
             return {
                 _id: sample._id,
                 center_id: sample.center_id,
+                center_name: centerName,
                 facility_sending_sample: sample.facility_sending_sample,
                 center: sample.center,
                 hub: sample.hub,
@@ -95,12 +117,12 @@ const getAllBloodSamples = async (req, res, next) => {
             };
         });
 
-        res.status(200).json({ total: count, data: formattedSamples });
+        const totalSamples = bloodSamples.length;
+        res.status(200).json({ total: totalSamples, data: formattedSamples });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 
 // 4. Get blood sample by _id
