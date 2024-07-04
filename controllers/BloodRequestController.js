@@ -5,9 +5,6 @@ const BloodCenter = require('../models/BloodCenter')
 const postRequests = async (req, res) => {
     try {
         const requests = req.body;
-        // if (!Array.isArray(requests)) {
-        //     return res.status(400).json({ message: 'Requests should be an array' });
-        // }
 
         const createdRequests = await BloodRequest.insertMany(requests);
         return res.status(201).json({ message: 'Requests added successfully', data: createdRequests });
@@ -16,55 +13,32 @@ const postRequests = async (req, res) => {
     }
 };
 
-// Function to get all blood requests
-// const getAllRequests = async (req, res) => {
-//     try {
-//         const requests = await BloodRequest.find();
-//         const totalRequests = requests.length;
-
-//         const formattedRequests = requests.map(request => {
-//             return {
-//                 _id: request._id,
-//                 center_id: request.center_id,
-//                 basic_info: request.basic_info,
-//                 whole_blood: request.whole_blood,
-//                 prc: request.prc,
-//                 ffp: request.ffp,
-//                 plt: request.plt,
-//                 createdAt: request.createdAt,
-//                 updatedAt: request.updatedAt,
-//                 __v: request.__v
-//             };
-//         });
-
-//         res.status(200).json({ total: totalRequests, data: formattedRequests });
-//         } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-
-// };
-
-
 const getAllRequests = async (req, res) => {
     try {
-        // Retrieve all blood requests
+        // Fetch all blood requests and blood centers
         const requests = await BloodRequest.find().lean();
-
-        // Retrieve all centers
         const centers = await BloodCenter.find().lean();
 
-        // Create a map of center_id to center_name for quick lookup
+        // Create a map of center ObjectIds to center names
         const centerMap = centers.reduce((map, center) => {
-            map[center.center_id] = center.center_name;
+            map[center._id.toString()] = center.name;  // Use toString() to ensure the keys are strings
             return map;
         }, {});
 
-        // Format the requests and include center_name
+        // Log the centerMap for debugging
+        console.log("Center Map:", centerMap);
+
+        // Format the requests with center names
         const formattedRequests = requests.map(request => {
+            const centerName = centerMap[request.center_id.toString()] || 'Unknown';  // Default to 'Unknown' if no match
+
+            // Log the mapping process for debugging
+            console.log(`Request center_id: ${request.center_id}, Mapped center_name: ${centerName}`);
+
             return {
                 _id: request._id,
                 center_id: request.center_id,
-                center_name: centerMap[request.center_id], 
+                center_name: centerName,
                 basic_info: request.basic_info,
                 whole_blood: request.whole_blood,
                 prc: request.prc,
@@ -76,6 +50,7 @@ const getAllRequests = async (req, res) => {
             };
         });
 
+        // Send the response with total requests and formatted data
         const totalRequests = requests.length;
         res.status(200).json({ total: totalRequests, data: formattedRequests });
     } catch (err) {
@@ -85,7 +60,7 @@ const getAllRequests = async (req, res) => {
 
 
 
-// Function to get a blood request by ID
+
 const getById = async (req, res) => {
     try {
         const requestId = req.params.id;
@@ -99,7 +74,6 @@ const getById = async (req, res) => {
     }
 };
 
-// Function to get blood requests by center ID
 const getByCenterId = async (req, res) => {
     try {
         const centerId = req.params.center_id;
